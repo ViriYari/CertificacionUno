@@ -17,7 +17,10 @@ jobs:
       uses: actions/checkout@v4
     
     - name: LISTAR ARCHIVOS (DEBUG)
-      run: ls -R  # Esto imprimirá toda la estructura de carpetas en el log
+      run: |
+        echo "PWD: $(pwd)"
+        ls -la
+        ls -R  # Esto imprimirá toda la estructura de carpetas en el log
 
     # Paso B: Configurar Java JDK 
     - name: Configurar Java JDK
@@ -29,12 +32,12 @@ jobs:
     # Usamos -f para indicar la ruta exacta del archivo
     - name: Levantar Docker
       run: |
-        echo "Contenido de la carpeta actual (root):"
-        ls -R
-        
-        if [ -f "docker-compose.yml" ]; then
+        echo "Workspace: $GITHUB_WORKSPACE"
+        ls -la "$GITHUB_WORKSPACE"
+
+        if [ -f "$GITHUB_WORKSPACE/docker-compose.yml" ]; then
           echo "El archivo existe. Intentando levantar..."
-          docker compose -f docker-compose.yml up -d
+          docker compose -f "$GITHUB_WORKSPACE/docker-compose.yml" up -d
         else
           echo "ERROR: El archivo no existe en la raíz."
           exit 1
