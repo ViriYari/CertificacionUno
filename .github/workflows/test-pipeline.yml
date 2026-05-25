@@ -28,8 +28,12 @@ jobs:
         cache: 'maven'
     # Usamos -f para indicar la ruta exacta del archivo
     - name: Levantar Docker
-      run: docker compose -f demo/docker-compose.yml up -d
-
+      run: |
+        # Buscamos el archivo y lo guardamos en una variable
+        COMPOSE_FILE=$(find . -name "docker-compose.yml" | head -n 1)
+        echo "Archivo encontrado en: $COMPOSE_FILE"
+        docker compose -f $COMPOSE_FILE up -d
+        
     - name: Esperar servicios
       run: sleep 30 # Tiempo para que Kafka y la App arranquen
 
