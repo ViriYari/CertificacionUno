@@ -1,0 +1,4 @@
+base\BaseTest.class
+tests\TransferTest.class
+tests\GoogleTest.class
+pages\TransferPage.class
