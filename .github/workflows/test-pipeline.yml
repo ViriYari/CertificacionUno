@@ -1,60 +1,45 @@
 name: Regresión Funcional E2E - Portal de Pagos
 
-# 1. El pipeline se activará automáticamente con cada Push a la rama main
 on:
   push:
-    branches: 
-      - main  
+    branches:
+      - main
 
 jobs:
   automation-test:
-    # 2. Corre en una máquina virtual de Ubuntu limpia en la nube
+    name: Automatización E2E
     runs-on: ubuntu-latest
-    
+
     steps:
-    # Paso A: Clonar tu repositorio dentro de la máquina de GitHub
-    - name: Checkout de código
-      uses: actions/checkout@v4
-    
-    - name: LISTAR ARCHIVOS (DEBUG)
-      run: |
-        echo "PWD: $(pwd)"
-        ls -la
-        ls -R  # Esto imprimirá toda la estructura de carpetas en el log
+      - name: Checkout de código
+        uses: actions/checkout@v4
 
-    # Paso B: Configurar Java JDK 
-    - name: Configurar Java JDK
-      uses: actions/setup-java@v4
-      with:
-        java-version: '21'
-        distribution: 'temurin'
-        cache: 'maven'
-    # Usamos -f para indicar la ruta exacta del archivo
-    - name: Levantar Docker
-      run: |
-        echo "Workspace: $GITHUB_WORKSPACE"
-        ls -la "$GITHUB_WORKSPACE"
+      - name: Configurar Java 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
 
-        if [ -f "$GITHUB_WORKSPACE/docker-compose.yml" ]; then
-          echo "El archivo existe. Intentando levantar..."
-          docker compose -f "$GITHUB_WORKSPACE/docker-compose.yml" up -d
-        else
-          echo "ERROR: El archivo no existe en la raíz."
-          exit 1
-        fi
+      - name: Levantar servicios Docker
+        run: |
+          if [ -f "docker-compose.yml" ]; then
+            docker compose -f docker-compose.yml up -d
+          else
+            echo "ERROR: docker-compose.yml no existe en la raíz del repositorio."
+            exit 1
+          fi
 
-    - name: Esperar servicios
-      run: sleep 30 # Tiempo para que Kafka y la App arranquen
+      - name: Esperar servicios
+        run: sleep 30
 
-    # 3. Instalar dependencias y ejecutar las pruebas en modo Headless
-    - name: Ejecutar Pruebas Automatizadas
-      run: mvn clean test -Dmaven.compiler.source=21 -Dmaven.compiler.target=21
+      - name: Ejecutar pruebas Maven
+        run: mvn clean test -Dmaven.compiler.source=21 -Dmaven.compiler.target=21
 
-    # 4. PUNTO EXTRA: Si los tests fallan, guarda el reporte como evidencia
-    - name: Subir Reporte de Errores (Artefacto)
-      if: failure()
-      uses: actions/upload-artifact@v4
-      with:
-        name: reporte-fallos-qa
-        path: target/surefire-reports/
-        retention-days: 5
+      - name: Subir reporte de fallos
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reporte-fallos-qa
+          path: target/surefire-reports/
+          retention-days: 5
