@@ -10,6 +10,9 @@ jobs:
   automation-test:
     # 2. Corre en una máquina virtual de Ubuntu limpia en la nube
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: demo
 
     steps:
     # Paso A: Clonar tu repositorio dentro de la máquina de GitHub
