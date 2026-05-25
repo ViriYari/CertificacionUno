@@ -28,9 +28,17 @@ jobs:
         cache: 'maven'
     # Usamos -f para indicar la ruta exacta del archivo
     - name: Levantar Docker
-      run: 
-        |
-        docker compose -f docker-compose.yml up -d
+      run: |
+        echo "Contenido de la carpeta actual (root):"
+        ls -R
+        
+        if [ -f "docker-compose.yml" ]; then
+          echo "El archivo existe. Intentando levantar..."
+          docker compose -f docker-compose.yml up -d
+        else
+          echo "ERROR: El archivo no existe en la raíz."
+          exit 1
+        fi
 
     - name: Esperar servicios
       run: sleep 30 # Tiempo para que Kafka y la App arranquen
