@@ -22,16 +22,10 @@ jobs:
           cache: 'maven'
 
       - name: Levantar servicios Docker
-        run: |
-          if [ -f "docker-compose.yml" ]; then
-            docker compose -f docker-compose.yml up -d
-          else
-            echo "ERROR: docker-compose.yml no existe en la raíz del repositorio."
-            exit 1
-          fi
+        run: docker compose up -d # Esto leerá tu archivo docker-compose.yml
 
       - name: Esperar servicios
         run: sleep 30
 
       - name: Ejecutar pruebas Maven
-        run: mvn clean test -Dmaven.compiler.source=21 -Dmaven.compiler.target=21
+        run: mvn clean test 
