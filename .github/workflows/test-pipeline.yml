@@ -15,6 +15,9 @@ jobs:
     # Paso A: Clonar tu repositorio dentro de la máquina de GitHub
     - name: Checkout de código
       uses: actions/checkout@v4
+    
+    - name: LISTAR ARCHIVOS (DEBUG)
+      run: ls -R  # Esto imprimirá toda la estructura de carpetas en el log
 
     # Paso B: Configurar Java JDK 
     - name: Configurar Java JDK
