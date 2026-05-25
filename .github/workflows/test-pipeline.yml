@@ -27,6 +27,12 @@ jobs:
         distribution: 'temurin'
         cache: 'maven'
 
+    - name: Levantar Docker
+      run: docker compose up -d
+
+    - name: Esperar servicios
+      run: sleep 30 # Tiempo para que Kafka y la App arranquen
+
     # 3. Instalar dependencias y ejecutar las pruebas en modo Headless
     - name: Ejecutar Pruebas Automatizadas
       run: mvn clean test -Dmaven.compiler.source=21 -Dmaven.compiler.target=21
