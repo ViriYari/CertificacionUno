@@ -26,9 +26,9 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
         cache: 'maven'
-
+    # Usamos -f para indicar la ruta exacta del archivo
     - name: Levantar Docker
-      run: docker compose up -d
+      run: docker compose -f demo/docker-compose.yml up -d
 
     - name: Esperar servicios
       run: sleep 30 # Tiempo para que Kafka y la App arranquen
