@@ -1,5 +1,6 @@
 package base;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.WebDriver;
@@ -13,19 +14,10 @@ public class BaseTest {
     protected WebDriver driver;
 
     @BeforeEach
-    //Funcione sin abrir la ventana
-    /*void setUp() {
-
-        driver = new ChromeDriver();
-
-        driver.manage().window().maximize();
-
-        driver.manage().timeouts()
-                .implicitlyWait(Duration.ofSeconds(5));
-    }*/
-  
     void setUp() {
         // Configuraciones para que Chrome funcione en la nube (GitHub Actions)
+        WebDriverManager.chromedriver().setup();
+
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless=new"); // Ejecuta sin abrir ventana
         options.addArguments("--no-sandbox");   // Evita problemas de seguridad en Linux
