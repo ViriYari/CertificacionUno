@@ -35,11 +35,3 @@ jobs:
 
       - name: Ejecutar pruebas Maven
         run: mvn clean test -Dmaven.compiler.source=21 -Dmaven.compiler.target=21
-
-      - name: Subir reporte de fallos
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: reporte-fallos-qa
-          path: target/surefire-reports/
-          retention-days: 5
