@@ -10,10 +10,7 @@ jobs:
   automation-test:
     # 2. Corre en una máquina virtual de Ubuntu limpia en la nube
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: demo
-
+    
     steps:
     # Paso A: Clonar tu repositorio dentro de la máquina de GitHub
     - name: Checkout de código
@@ -28,7 +25,7 @@ jobs:
         cache: 'maven'
     # Usamos -f para indicar la ruta exacta del archivo
     - name: Levantar Docker
-      run: docker compose up -d
+      run: docker compose -f demo/docker-compose.yml up -d
 
     - name: Esperar servicios
       run: sleep 30 # Tiempo para que Kafka y la App arranquen
