@@ -23,13 +23,13 @@ jobs:
     - name: Configurar Java JDK
       uses: actions/setup-java@v4
       with:
-        java-version: '17'
+        java-version: '21'
         distribution: 'temurin'
         cache: 'maven'
 
     # 3. Instalar dependencias y ejecutar las pruebas en modo Headless
     - name: Ejecutar Pruebas Automatizadas
-      run: mvn clean test
+      run: mvn clean test -Dmaven.compiler.source=21 -Dmaven.compiler.target=21
 
     # 4. PUNTO EXTRA: Si los tests fallan, guarda el reporte como evidencia
     - name: Subir Reporte de Errores (Artefacto)
