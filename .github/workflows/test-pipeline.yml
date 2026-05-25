@@ -1,0 +1,38 @@
+name: Regresión Funcional E2E - Portal de Pagos
+
+# 1. El pipeline se activará automáticamente con cada Push a la rama main
+on:
+  push:
+    branches: 
+      - main  
+
+jobs:
+  automation-test:
+    # 2. Corre en una máquina virtual de Ubuntu limpia en la nube
+    runs-on: ubuntu-latest
+
+    steps:
+    # Paso A: Clonar tu repositorio dentro de la máquina de GitHub
+    - name: Checkout de código
+      uses: actions/checkout@v4
+
+    # Paso B: Configurar Java JDK 
+    - name: Configurar Java JDK
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: 'maven'
+
+    # 3. Instalar dependencias y ejecutar las pruebas en modo Headless
+    - name: Ejecutar Pruebas Automatizadas
+      run: mvn clean test
+
+    # 4. PUNTO EXTRA: Si los tests fallan, guarda el reporte como evidencia
+    - name: Subir Reporte de Errores (Artefacto)
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: reporte-fallos-qa
+        path: target/surefire-reports/
+        retention-days: 5
